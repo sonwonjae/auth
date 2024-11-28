@@ -1,0 +1,11 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "ui": "tui",
+    "globalEnv": ["PORT"],
+    "tasks": {
+        "dev": {
+            "cache": false,
+            "persistent": true
+        }
+    }
+}

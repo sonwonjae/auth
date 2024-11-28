@@ -1,0 +1,12 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "turbo dev"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "pnpm@9.12.2",
+  "author": "sonwonjae"
+}
