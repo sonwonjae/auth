@@ -3,11 +3,11 @@ import type { ServerResponse } from "http";
 
 import { createRouter } from "next-connect";
 
-import { GoogleLogin } from "@/components/GoogleLogin";
-import { KakaoLogin } from "@/components/KakaoLogin";
 import { makeGetServerSideProps } from "@/middlewares/common/makeGetServerSideProps";
 import { pipe } from "@/middlewares/utils/pipe";
 import { middleware } from "@/pages-src/index";
+import { GoogleLogin } from "@/pages-src/index/components/GoogleLogin";
+import { KakaoLogin } from "@/pages-src/index/components/KakaoLogin";
 import { cn } from "@/utils/tailwind";
 
 const router = createRouter<CustomIncomingMessage, ServerResponse>();
