@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { KakaoModule } from './kakao/kakao.module';
 import { SupabaseModule } from './supabase/supabase.module';
+import { GoogleModule } from './google/google.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SupabaseModule } from './supabase/supabase.module';
     SupabaseModule,
     KakaoModule,
     AuthModule,
+    GoogleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
