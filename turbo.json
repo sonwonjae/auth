@@ -6,6 +6,8 @@
 
         "WEB_SERVER_HOST",
         "API_SERVER_HOST",
+        "MOMUK_WEB_SERVER_HOST",
+        "MOMUK_API_SERVER_HOST",
         "KAKAO_REST_APP_KEY",
         "KAKAO_REDIRECT_URI",
         "GOOGLE_CLIENT_ID",

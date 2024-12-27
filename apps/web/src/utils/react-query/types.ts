@@ -6,7 +6,7 @@ import { ServerResponse } from "http";
 
 /** FIXME: back 로직이랑 타입 싱크 맞추기 */
 export type ResponseMap = {
-  "/auth/check": {
+  "/api/user/auth/check": {
     id: string;
     avatarUrl: string;
     name: string;

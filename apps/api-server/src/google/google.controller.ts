@@ -1,6 +1,6 @@
 import type { Response as ExpressResponse } from 'express';
 
-import { Controller, Get, Res, Query } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 
 import { GoogleService } from './google.service';
 
@@ -24,9 +24,7 @@ export class GoogleController {
 
   /** FIXME: 완성 못함, 쓰면 안됨 */
   @Get('callback')
-  async callback(@Query('code') code: string) {
-    console.log({ code });
-    const userInfo = await this.googleService.getUserInfo(code);
-    console.dir(userInfo, { depth: null });
+  async callback() {
+    // const userInfo = await this.googleService.getUserInfo(code);
   }
 }

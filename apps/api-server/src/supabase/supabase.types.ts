@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      assembles: {
+        Row: {
+          createdAt: string;
+          id: string;
+          title: string;
+          updatedAt: string;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: string;
+          title?: string;
+          updatedAt?: string;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          title?: string;
+          updatedAt?: string;
+        };
+        Relationships: [];
+      };
       auth_tokens: {
         Row: {
           accessToken: string;
@@ -38,7 +59,7 @@ export type Database = {
           {
             foreignKeyName: 'auth_tokens_userid_fkey';
             columns: ['userId'];
-            isOneToOne: false;
+            isOneToOne: true;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },

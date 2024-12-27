@@ -6,7 +6,7 @@ import { createRouter } from "next-connect";
 
 import { makeGetServerSideProps } from "@/middlewares/common/makeGetServerSideProps";
 import { pipe } from "@/middlewares/utils/pipe";
-import { middleware } from "@/pages-src/info";
+import { middleware } from "@/pages-src/auth/index";
 import { RQClient } from "@/utils/react-query";
 import { cn } from "@/utils/tailwind";
 
@@ -16,7 +16,7 @@ router.get(pipe(middleware));
 export const getServerSideProps = makeGetServerSideProps(router);
 
 export default function InfoPage() {
-  const authQuery = new RQClient({ url: "/auth/check" });
+  const authQuery = new RQClient({ url: "/api/user/auth/check" });
   const { data: userInfo } = useQuery(authQuery.queryOptions);
 
   return (
@@ -69,7 +69,7 @@ export default function InfoPage() {
           )}
         >
           <a
-            href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/auth/logout`}
+            href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/user/auth/logout`}
             className={cn(
               "flex",
               "items-center",

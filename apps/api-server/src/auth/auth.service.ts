@@ -113,6 +113,11 @@ export class AuthService {
       REFRESH_TOKEN_COOKIE_OPTION,
     );
 
+    console.log('issue: ', {
+      accessToken,
+      refreshToken,
+    });
+
     await this.supabaseService.client.from('auth_tokens').upsert(
       {
         userId,
@@ -198,8 +203,10 @@ export class AuthService {
     const isUser = !!userInfo?.id;
 
     if (isUser) {
+      // FIXME: 사업자 등록 성공 시 유저 정보 업데이트로 진행
+      // FIXME: 사업자 등록 실패 시 닉네임 기획 적용
       await this.updateUser(res, {
-        ...newUserInfo,
+        providerId: newUserInfo.providerId,
         id: userInfo.id,
       });
     } else {

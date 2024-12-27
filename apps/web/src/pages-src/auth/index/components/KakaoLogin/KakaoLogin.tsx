@@ -5,7 +5,7 @@ import { cn } from "@/utils/tailwind";
 function KakaoLogin() {
   return (
     <a
-      href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/kakao/login`}
+      href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/user/kakao/login`}
       className={cn(
         "flex",
         "items-center",

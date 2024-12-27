@@ -17,6 +17,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: ExpressResponse,
   ) {
     const { accessToken, refreshToken } = this.authService.getTokenInfo(req);
+    console.log({
+      accessToken,
+      refreshToken,
+    });
     try {
       return await this.authService.getUserInfoWithAccessToken(accessToken);
     } catch {
@@ -27,6 +31,8 @@ export class AuthController {
   @Get('logout')
   logout(@Res({ passthrough: true }) res: ExpressResponse) {
     this.authService.expireTokenInfo(res);
-    return res.status(302).redirect(process.env.WEB_SERVER_HOST as string);
+    return res
+      .status(302)
+      .redirect(`${process.env.WEB_SERVER_HOST as string}/auth`);
   }
 }

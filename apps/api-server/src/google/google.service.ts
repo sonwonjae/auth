@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
 
 @Injectable()
@@ -20,7 +20,6 @@ export class GoogleService {
   async getUserInfo(code: string) {
     try {
       const { tokens } = await this.oauth2Client.getToken(code);
-      console.log({ tokens });
       this.oauth2Client.credentials = tokens;
       const { data } = await this.people.people.get({
         resourceName: 'people/me',
@@ -32,9 +31,8 @@ export class GoogleService {
         name: data?.names?.[0].displayName,
         email: data?.emailAddresses?.[0].value,
       };
-    } catch (err) {
-      //   throw err;
-      console.error({ err });
+    } catch (error) {
+      throw error as HttpException;
     }
   }
 }

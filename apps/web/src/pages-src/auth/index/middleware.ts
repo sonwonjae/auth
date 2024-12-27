@@ -19,27 +19,24 @@ const prefetch: Middleware<Req> = async (req, res) => {
 
   if (!accessToken && !refreshToken) {
     return {
-      redirect: {
-        destination: "/",
-        permanent: true,
-      },
+      props: {},
     };
   }
   const queryClient = new QueryClient();
 
   try {
-    const authQuery = new RQServer({ url: "/auth/check", res });
+    const authQuery = new RQServer({ url: "/api/user/auth/check", res });
     await queryClient.fetchQuery(authQuery.queryOptions);
 
     return {
-      props: { dehydratedState: dehydrate(queryClient) },
+      redirect: {
+        destination: "/info",
+        permanent: true,
+      },
     };
   } catch {
     return {
-      redirect: {
-        destination: "/",
-        permanent: true,
-      },
+      props: { dehydratedState: dehydrate(queryClient) },
     };
   }
 };
