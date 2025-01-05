@@ -65,6 +65,259 @@ export type Database = {
           },
         ];
       };
+      cuisine: {
+        Row: {
+          id: string;
+          name: string;
+        };
+        Insert: {
+          id?: string;
+          name?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      food__cuisine: {
+        Row: {
+          cuisineId: string;
+          foodId: string;
+        };
+        Insert: {
+          cuisineId?: string;
+          foodId?: string;
+        };
+        Update: {
+          cuisineId?: string;
+          foodId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'food__cuisine_cuisineId_fkey';
+            columns: ['cuisineId'];
+            isOneToOne: false;
+            referencedRelation: 'cuisine';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'food__cuisine_foodId_fkey';
+            columns: ['foodId'];
+            isOneToOne: false;
+            referencedRelation: 'foods';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      foods: {
+        Row: {
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: string;
+          name?: string;
+          updatedAt?: string;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          name?: string;
+          updatedAt?: string;
+        };
+        Relationships: [];
+      };
+      recommend__foods: {
+        Row: {
+          foodId: string;
+          id: string;
+          recommendId: string;
+          type: Database['public']['Enums']['recommend_type'];
+        };
+        Insert: {
+          foodId: string;
+          id?: string;
+          recommendId: string;
+          type?: Database['public']['Enums']['recommend_type'];
+        };
+        Update: {
+          foodId?: string;
+          id?: string;
+          recommendId?: string;
+          type?: Database['public']['Enums']['recommend_type'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'recommend__foods_foodId_fkey';
+            columns: ['foodId'];
+            isOneToOne: false;
+            referencedRelation: 'foods';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'recommend__foods_recommendId_fkey';
+            columns: ['recommendId'];
+            isOneToOne: false;
+            referencedRelation: 'recommends';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      recommend__users: {
+        Row: {
+          id: string;
+          recommendId: string;
+          userId: string;
+        };
+        Insert: {
+          id?: string;
+          recommendId: string;
+          userId: string;
+        };
+        Update: {
+          id?: string;
+          recommendId?: string;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'recommend__users_recommendId_fkey';
+            columns: ['recommendId'];
+            isOneToOne: false;
+            referencedRelation: 'recommends';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'recommend__users_userId_fkey';
+            columns: ['userId'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      recommends: {
+        Row: {
+          assembleId: string;
+          createdAt: string;
+          id: string;
+        };
+        Insert: {
+          assembleId: string;
+          createdAt?: string;
+          id?: string;
+        };
+        Update: {
+          assembleId?: string;
+          createdAt?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'recommends_assembleId_fkey';
+            columns: ['assembleId'];
+            isOneToOne: false;
+            referencedRelation: 'assembles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      user__assemble__foods: {
+        Row: {
+          assembleId: string;
+          foodId: string;
+          id: string;
+          surveyType: Database['public']['Enums']['food_survey_type'];
+          userAssembleId: string;
+          userId: string;
+        };
+        Insert: {
+          assembleId: string;
+          foodId: string;
+          id?: string;
+          surveyType?: Database['public']['Enums']['food_survey_type'];
+          userAssembleId: string;
+          userId: string;
+        };
+        Update: {
+          assembleId?: string;
+          foodId?: string;
+          id?: string;
+          surveyType?: Database['public']['Enums']['food_survey_type'];
+          userAssembleId?: string;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'user__assemble__foods_assembleId_fkey';
+            columns: ['assembleId'];
+            isOneToOne: false;
+            referencedRelation: 'assembles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'user__assemble__foods_foodId_fkey';
+            columns: ['foodId'];
+            isOneToOne: false;
+            referencedRelation: 'foods';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'user__assemble__foods_userAssembleId_fkey';
+            columns: ['userAssembleId'];
+            isOneToOne: false;
+            referencedRelation: 'user__assembles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'user__assemble__foods_userId_fkey';
+            columns: ['userId'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      user__assembles: {
+        Row: {
+          assembleId: string;
+          id: string;
+          permission: Database['public']['Enums']['permission'];
+          userId: string;
+        };
+        Insert: {
+          assembleId?: string;
+          id?: string;
+          permission?: Database['public']['Enums']['permission'];
+          userId?: string;
+        };
+        Update: {
+          assembleId?: string;
+          id?: string;
+          permission?: Database['public']['Enums']['permission'];
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'user_assembles_assembleId_fkey';
+            columns: ['assembleId'];
+            isOneToOne: false;
+            referencedRelation: 'assembles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'user_assembles_userId_fkey';
+            columns: ['userId'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       users: {
         Row: {
           avatarUrl: string;
@@ -106,7 +359,10 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      food_survey_type: 'favorite' | 'hate';
+      permission: 'owner' | 'member';
       provider: 'kakao';
+      recommend_type: 'single-cuisine' | 'multi-cuisine' | 'most-favorite';
     };
     CompositeTypes: {
       [_ in never]: never;

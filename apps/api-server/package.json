@@ -31,6 +31,7 @@
     "@supabase/supabase-js": "^2.46.2",
     "@types/cookie-parser": "^1.4.8",
     "axios": "^1.7.8",
+    "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.7",
     "googleapis": "^144.0.0",
     "reflect-metadata": "^0.2.0",

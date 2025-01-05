@@ -4,22 +4,17 @@ import type {
   Response as ExpressResponse,
 } from 'express';
 
-import {
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/supabase/supabase.service';
 import { Tables } from 'src/supabase/supabase.types';
 import { v4 as uuidv4 } from 'uuid';
-
-import { UserInfo } from './auth.type';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly supabaseService: SupabaseService) {}
 
-  getTokenInfo(req: ExpressRequest) {
+  /** NOTE: READ token */
+  getToken(req: ExpressRequest) {
     const accessToken: string | undefined =
       req.cookies[process.env.AUTH_ACCESS_TOKEN_COOKIE_NAME as string];
     const refreshToken: string | undefined =
@@ -31,55 +26,54 @@ export class AuthService {
     };
   }
 
-  async getUserInfoWithAccessToken(accessToken?: string) {
-    if (!accessToken) {
-      throw new UnauthorizedException();
+  /** NOTE: CEHCK token */
+  async checkToken(req: ExpressRequest, res: ExpressResponse) {
+    try {
+      const { accessToken } = this.getToken(req);
+
+      if (!accessToken) {
+        return this.checkRefreshToken(req, res);
+      }
+
+      const { data: authToken } = await this.supabaseService.client
+        .from('auth_tokens')
+        .select('*')
+        .eq('accessToken', accessToken)
+        .single();
+
+      if (!authToken) {
+        return this.checkRefreshToken(req, res);
+      }
+
+      return this.getUserWithUserId(authToken.userId);
+    } catch (error) {
+      throw error as HttpException;
+    }
+  }
+
+  /** NOTE: CEHCK refresh token */
+  async checkRefreshToken(req: ExpressRequest, res: ExpressResponse) {
+    const { refreshToken } = this.getToken(req);
+
+    if (!refreshToken) {
+      throw new ForbiddenException();
     }
 
     const { data: authToken } = await this.supabaseService.client
       .from('auth_tokens')
       .select('*')
-      .eq('accessToken', accessToken)
+      .eq('refreshToken', refreshToken)
       .single();
 
     if (!authToken) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
-    const { data: userInfo } = await this.supabaseService.client
-      .from('users')
-      .select('*')
-      .eq('id', authToken.userId)
-      .single();
-
-    if (!userInfo) {
-      throw new UnauthorizedException();
-    }
-
-    return userInfo;
+    await this.reissueToken(res, authToken.userId);
+    return this.getUserWithUserId(authToken.userId);
   }
 
-  expireTokenInfo(res: ExpressResponse) {
-    const EXPIRED_COOKIE_OPTION: CookieOptions = {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-      path: '/',
-      expires: new Date(0),
-    };
-
-    res.cookie(
-      process.env.AUTH_ACCESS_TOKEN_COOKIE_NAME as string,
-      '',
-      EXPIRED_COOKIE_OPTION,
-    );
-    res.cookie(
-      process.env.AUTH_REFRESH_TOKEN_COOKIE_NAME as string,
-      '',
-      EXPIRED_COOKIE_OPTION,
-    );
-  }
-
+  /** NOTE: CREATE token */
   async issueToken(res: ExpressResponse, userId: string) {
     const accessToken = uuidv4();
     const refreshToken = uuidv4();
@@ -113,11 +107,6 @@ export class AuthService {
       REFRESH_TOKEN_COOKIE_OPTION,
     );
 
-    console.log('issue: ', {
-      accessToken,
-      refreshToken,
-    });
-
     await this.supabaseService.client.from('auth_tokens').upsert(
       {
         userId,
@@ -130,54 +119,89 @@ export class AuthService {
     );
   }
 
-  async reissueToken(res: ExpressResponse, refreshToken?: string) {
-    if (!refreshToken) {
-      throw new ForbiddenException();
-    }
-    const { data: authToken } = await this.supabaseService.client
-      .from('auth_tokens')
-      .select('*')
-      .eq('refreshToken', refreshToken)
-      .single();
+  /** NOTE: DELETE token */
+  async expireToken(res: ExpressResponse) {
+    const EXPIRED_COOKIE_OPTION: CookieOptions = {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+      path: '/',
+      expires: new Date(0),
+    };
+    res.cookie(
+      process.env.AUTH_ACCESS_TOKEN_COOKIE_NAME as string,
+      '',
+      EXPIRED_COOKIE_OPTION,
+    );
+    res.cookie(
+      process.env.AUTH_REFRESH_TOKEN_COOKIE_NAME as string,
+      '',
+      EXPIRED_COOKIE_OPTION,
+    );
+  }
 
-    if (!authToken) {
-      throw new ForbiddenException();
-    }
+  /** NOTE: UPDATE token */
+  async reissueToken(res: ExpressResponse, userId: string) {
+    await this.expireToken(res);
+    await this.issueToken(res, userId);
+  }
 
+  /** NOTE: READ user with userId */
+  async getUserWithUserId(userId: string) {
     const { data: userInfo } = await this.supabaseService.client
       .from('users')
       .select('*')
-      .eq('id', authToken.userId)
+      .eq('id', userId)
       .single();
 
     if (!userInfo) {
       throw new ForbiddenException();
     }
 
-    await this.issueToken(res, userInfo.id);
+    return userInfo;
+  }
+
+  /** NOTE: READ user with providerId */
+  async getUserWithProviderId(providerId: string) {
+    const { data: userInfo } = await this.supabaseService.client
+      .from('users')
+      .select('*')
+      .eq('providerId', providerId)
+      .single();
 
     return userInfo;
   }
 
-  async addUser(res: ExpressResponse, newUserInfo: Partial<Tables<'users'>>) {
-    const { data: userInfo } = await this.supabaseService.client
+  /** NOTE: CREATE user with providerId */
+  async addUserWithProviderId(
+    providerId: string,
+    newUserInfo: Partial<Tables<'users'>>,
+  ) {
+    const userInfo = await this.getUserWithProviderId(providerId);
+
+    if (userInfo) {
+      return userInfo;
+    }
+
+    const { data: addedUserInfo } = await this.supabaseService.client
       .from('users')
       .insert(newUserInfo)
       .select('*')
       .single();
 
-    if (!userInfo) {
+    if (!addedUserInfo) {
       throw new ForbiddenException();
     }
-    await this.issueToken(res, userInfo.id);
 
-    return userInfo;
+    return addedUserInfo;
   }
 
-  async updateUser(
-    res: ExpressResponse,
-    updatedUserInfo: Partial<Tables<'users'>> & { id: Tables<'users'>['id'] },
-  ) {
+  /** NOTE: UPDATE user */
+  async updateUser(updatedUserInfo: Partial<Tables<'users'>>) {
+    if (!updatedUserInfo?.id) {
+      throw new ForbiddenException();
+    }
+
     const { data: userInfo } = await this.supabaseService.client
       .from('users')
       .update({ ...updatedUserInfo })
@@ -188,29 +212,13 @@ export class AuthService {
     if (!userInfo) {
       throw new ForbiddenException();
     }
-    await this.issueToken(res, userInfo.id);
 
     return userInfo;
   }
 
-  async registUser(res: ExpressResponse, newUserInfo: UserInfo) {
-    const { data: userInfo } = await this.supabaseService.client
-      .from('users')
-      .select('*')
-      .eq('providerId', newUserInfo.providerId)
-      .single();
-
-    const isUser = !!userInfo?.id;
-
-    if (isUser) {
-      // FIXME: 사업자 등록 성공 시 유저 정보 업데이트로 진행
-      // FIXME: 사업자 등록 실패 시 닉네임 기획 적용
-      await this.updateUser(res, {
-        providerId: newUserInfo.providerId,
-        id: userInfo.id,
-      });
-    } else {
-      await this.addUser(res, newUserInfo);
-    }
+  /** NOTE: DELETE user */
+  async deleteUser(res: ExpressResponse, userId: string) {
+    await this.expireToken(res);
+    await this.supabaseService.client.from('users').delete().eq('id', userId);
   }
 }
