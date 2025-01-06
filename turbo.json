@@ -1,38 +1,40 @@
 {
-    "$schema": "https://turbo.build/schema.json",
-    "ui": "tui",
-    "globalEnv": [
-        "PORT",
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "globalEnv": [
+    "PORT",
 
-        "WEB_SERVER_HOST",
-        "API_SERVER_HOST",
-        "MOMUK_WEB_SERVER_HOST",
-        "MOMUK_API_SERVER_HOST",
-        "KAKAO_ADMIN_APP_KEY",
-        "KAKAO_REST_APP_KEY",
-        "KAKAO_REDIRECT_URI",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_SECRET",
-        "GOOGLE_REDIRECT_URI",
-        "AUTH_PROVIDER_COOKIE_NAME",
-        "AUTH_ACCESS_TOKEN_COOKIE_NAME",
-        "AUTH_REFRESH_TOKEN_COOKIE_NAME",
-        "SUPABASE_URL",
-        "SUPABASE_ANON_KEY",
-        "SUPABASE_DATABASE_PASSWORD",
-        "SUPABASE_PASSWORD",
-        "SUPABASE_PROJECT_ID",
-        
-        "NEXT_PUBLIC_WEB_SERVER_HOST",
-        "NEXT_PUBLIC_API_SERVER_HOST",
-        "NEXT_PUBLIC_AUTH_PROVIDER_COOKIE_NAME",
-        "NEXT_PUBLIC_AUTH_ACCESS_TOKEN_COOKIE_NAME",
-        "NEXT_PUBLIC_AUTH_REFRESH_TOKEN_COOKIE_NAME"
-    ],
-    "tasks": {
-        "dev": {
-            "cache": false,
-            "persistent": true
-        }
+    "WEB_SERVER_HOST",
+    "API_SERVER_HOST",
+    "MOMUK_WEB_SERVER_HOST",
+    "MOMUK_API_SERVER_HOST",
+    "KAKAO_ADMIN_APP_KEY",
+    "KAKAO_REST_APP_KEY",
+    "KAKAO_LOGIN_REDIRECT_URI",
+    "KAKAO_CHECK_REDIRECT_URI",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_SECRET",
+    "GOOGLE_REDIRECT_URI",
+    "AUTH_PROVIDER_COOKIE_NAME",
+    "AUTH_ACCESS_TOKEN_COOKIE_NAME",
+    "AUTH_REFRESH_TOKEN_COOKIE_NAME",
+    "AUTH_CHECK_COOKIE_NAME",
+    "SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_DATABASE_PASSWORD",
+    "SUPABASE_PASSWORD",
+    "SUPABASE_PROJECT_ID",
+
+    "NEXT_PUBLIC_WEB_SERVER_HOST",
+    "NEXT_PUBLIC_API_SERVER_HOST",
+    "NEXT_PUBLIC_AUTH_PROVIDER_COOKIE_NAME",
+    "NEXT_PUBLIC_AUTH_ACCESS_TOKEN_COOKIE_NAME",
+    "NEXT_PUBLIC_AUTH_REFRESH_TOKEN_COOKIE_NAME"
+  ],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
     }
+  }
 }

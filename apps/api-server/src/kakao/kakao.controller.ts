@@ -17,7 +17,19 @@ export class KakaoController {
     return res
       .status(302)
       .redirect(
-        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_REST_APP_KEY as string}&redirect_uri=${process.env.KAKAO_REDIRECT_URI as string}&response_type=code&state=${encodeURIComponent(query.redirectUrl)}`,
+        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_REST_APP_KEY as string}&redirect_uri=${process.env.KAKAO_LOGIN_REDIRECT_URI as string}&response_type=code&state=${encodeURIComponent(query.redirectUrl)}`,
+      );
+  }
+
+  @Get('check')
+  async check(
+    @Res({ passthrough: true }) res: ExpressResponse,
+    @Query() query: KakaoLoginDto,
+  ) {
+    return res
+      .status(302)
+      .redirect(
+        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_REST_APP_KEY as string}&redirect_uri=${process.env.KAKAO_CHECK_REDIRECT_URI as string}&response_type=code&state=${encodeURIComponent(query.redirectUrl)}`,
       );
   }
 }

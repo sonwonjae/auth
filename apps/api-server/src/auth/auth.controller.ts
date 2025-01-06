@@ -26,6 +26,38 @@ export class AuthController {
     private readonly kakaoService: KakaoService,
   ) {}
 
+  @Get('callback/check/:provider')
+  async checkCallback(
+    @Res({ passthrough: true }) res: ExpressResponse,
+    @Param('provider') provider: 'kakao',
+    @Query('code') code: string,
+    @Query('state') state: string,
+  ) {
+    const oauthUserInfo = await (async () => {
+      switch (provider) {
+        case 'kakao':
+          return await this.kakaoService.getUserInfoWithCode(
+            code,
+            process.env.KAKAO_CHECK_REDIRECT_URI as string,
+          );
+      }
+    })();
+    const userInfo = await this.authService.getUserWithProviderId(
+      oauthUserInfo.providerId,
+    );
+
+    if (userInfo) {
+      res.cookie(process.env.AUTH_CHECK_COOKIE_NAME as string, 'success', {
+        // httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        path: '/',
+      });
+    }
+    const redirectUrl = state;
+    return res.status(302).redirect(redirectUrl);
+  }
+
   @Get('callback/login/:provider')
   async loginCallback(
     @Res({ passthrough: true }) res: ExpressResponse,
@@ -36,7 +68,10 @@ export class AuthController {
     const oauthUserInfo = await (async () => {
       switch (provider) {
         case 'kakao':
-          return await this.kakaoService.getUserInfoWithCode(code);
+          return await this.kakaoService.getUserInfoWithCode(
+            code,
+            process.env.KAKAO_LOGIN_REDIRECT_URI as string,
+          );
       }
     })();
     const userInfo = await this.authService.addUserWithProviderId(

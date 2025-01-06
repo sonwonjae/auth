@@ -1,7 +1,7 @@
 export interface OAuthTokenBody {
   grant_type: 'authorization_code';
   client_id: typeof process.env.KAKAO_REST_APP_KEY;
-  redirect_uri: typeof process.env.KAKAO_REDIRECT_URI;
+  redirect_uri: typeof process.env.KAKAO_LOGIN_REDIRECT_URI;
   code: string;
   client_secret?: string;
 }

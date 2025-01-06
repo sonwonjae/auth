@@ -39,7 +39,7 @@ export class KakaoService {
     }
   }
 
-  async getUserInfoWithCode(code: string) {
+  async getUserInfoWithCode(code: string, redirectUrl: string) {
     try {
       const {
         data: { access_token: accessToken },
@@ -50,7 +50,7 @@ export class KakaoService {
             {
               grant_type: 'authorization_code',
               client_id: process.env.KAKAO_REST_APP_KEY,
-              redirect_uri: process.env.KAKAO_REDIRECT_URI,
+              redirect_uri: redirectUrl,
               code,
             },
             {
@@ -92,7 +92,9 @@ export class KakaoService {
         providerId: String(userInfo.id),
         provider: 'kakao',
       } as const;
-    } catch (error) {
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error(error?.response?.data);
       throw error as AxiosError;
     }
   }
