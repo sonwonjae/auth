@@ -30,6 +30,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      auth_quit_survey: {
+        Row: {
+          createdAt: string;
+          id: string;
+          reason: string;
+          suggestion: string;
+          userProviderId: string;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: string;
+          reason?: string;
+          suggestion?: string;
+          userProviderId?: string;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          reason?: string;
+          suggestion?: string;
+          userProviderId?: string;
+        };
+        Relationships: [];
+      };
       auth_tokens: {
         Row: {
           accessToken: string;

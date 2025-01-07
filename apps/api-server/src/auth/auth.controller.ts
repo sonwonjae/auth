@@ -6,6 +6,7 @@ import type {
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -18,6 +19,7 @@ import { KakaoService } from 'src/kakao/kakao.service';
 import { Tables } from 'src/supabase/supabase.types';
 
 import { AuthService } from './auth.service';
+import { DeleteAuthDto } from './dto/delete-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -134,10 +136,11 @@ export class AuthController {
   }
 
   /** NOTE: 회원탈퇴 */
-  @Get('quit')
+  @Delete('quit')
   async quit(
     @Req() req: ExpressRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
+    @Body() body: DeleteAuthDto,
   ) {
     const {
       provider,
@@ -146,6 +149,7 @@ export class AuthController {
     } = await this.authService.checkToken(req, res);
     await this.authService.expireToken(res);
     await this.authService.deleteUser(res, userId);
+    await this.authService.registQuitUserSurveyForm(providerId, body);
 
     switch (provider) {
       case 'kakao':
@@ -156,7 +160,15 @@ export class AuthController {
 
   /** NOTE: 유저 정보 업데이트 */
   @Patch('')
-  async updateUser(@Body() updatedUserInfo: Partial<Tables<'users'>>) {
-    return this.authService.updateUser(updatedUserInfo);
+  async updateUser(
+    @Req() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
+    @Body() updatedUserInfo: Partial<Tables<'users'>>,
+  ) {
+    const userInfo = await this.authService.checkToken(req, res);
+    return this.authService.updateUser({
+      id: userInfo.id,
+      ...updatedUserInfo,
+    });
   }
 }

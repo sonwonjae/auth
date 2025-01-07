@@ -9,6 +9,8 @@ import { SupabaseService } from 'src/supabase/supabase.service';
 import { Tables } from 'src/supabase/supabase.types';
 import { v4 as uuidv4 } from 'uuid';
 
+import { DeleteAuthDto } from './dto/delete-auth.dto';
+
 @Injectable()
 export class AuthService {
   constructor(private readonly supabaseService: SupabaseService) {}
@@ -220,5 +222,20 @@ export class AuthService {
   async deleteUser(res: ExpressResponse, userId: string) {
     await this.expireToken(res);
     await this.supabaseService.client.from('users').delete().eq('id', userId);
+  }
+
+  async registQuitUserSurveyForm(
+    userProviderId: string,
+    quitUserSurveyForm: DeleteAuthDto,
+  ) {
+    await this.supabaseService.client
+      .from('auth_quit_survey')
+      .insert({
+        userProviderId,
+        reason: quitUserSurveyForm.reason,
+        suggestion: quitUserSurveyForm.suggestion,
+        createdAt: new Date().toISOString(),
+      })
+      .select('*');
   }
 }
