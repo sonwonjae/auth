@@ -4,6 +4,7 @@
   "globalEnv": [
     "PORT",
     "HOST",
+    "MODE",
 
     "DOMAIN",
     "KAKAO_ADMIN_APP_KEY",
