@@ -5,8 +5,9 @@
     "PORT",
     "HOST",
     "MODE",
-
     "DOMAIN",
+
+    "NEXT_PUBLIC_MODE",
     "KAKAO_ADMIN_APP_KEY",
     "KAKAO_REST_APP_KEY",
     "KAKAO_LOGIN_REDIRECT_URI",

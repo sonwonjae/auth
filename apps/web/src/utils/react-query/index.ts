@@ -12,7 +12,7 @@ export const apiAxios = axios.create({
   timeout: 1000 * 60,
   withCredentials: true,
   httpsAgent: new https.Agent({
-    rejectUnauthorized: process.env.MODE !== "dev",
+    rejectUnauthorized: process.env.NEXT_PUBLIC_MODE !== "dev",
   }),
 });
 
