@@ -10,12 +10,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: [
-      process.env.WEB_SERVER_HOST as string,
-      process.env.API_SERVER_HOST as string,
-      process.env.MOMUK_WEB_SERVER_HOST as string,
-      process.env.MOMUK_API_SERVER_HOST as string,
-    ],
+    origin: [process.env.HOST as string],
     credentials: true,
   });
 

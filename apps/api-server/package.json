@@ -9,7 +9,7 @@
     "set:env": "dotenv -e .env",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "dev": "pnpm set:env -- nest start --watch",
+    "dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm set:env -- nest start --watch",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

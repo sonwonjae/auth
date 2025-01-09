@@ -50,7 +50,8 @@ export class AuthController {
 
     if (userInfo) {
       res.cookie(process.env.AUTH_CHECK_COOKIE_NAME as string, 'success', {
-        // httpOnly: true,
+        domain: process.env.DOMAIN as string,
+        httpOnly: true,
         sameSite: 'none',
         secure: true,
         path: '/',

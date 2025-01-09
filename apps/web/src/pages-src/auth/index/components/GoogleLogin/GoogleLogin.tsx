@@ -9,7 +9,7 @@ function GoogleLogin() {
   /** FIXME: 완성 못함 아직 Fade Out 처리해둠, API 완성 후 다시 오픈 예정 */
   return (
     <a
-      href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/google/login`}
+      href={`${process.env.HOST}/google/login`}
       className={cn(
         "flex",
         "items-center",

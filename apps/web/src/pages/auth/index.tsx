@@ -69,7 +69,7 @@ export default function InfoPage() {
           )}
         >
           <a
-            href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/user/auth/logout`}
+            href={`${process.env.HOST}/api/user/auth/logout`}
             className={cn(
               "flex",
               "items-center",

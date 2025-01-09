@@ -85,6 +85,7 @@ export class AuthService {
     );
 
     const COMMON_COOKIE_OPTION: CookieOptions = {
+      domain: process.env.DOMAIN as string,
       httpOnly: true,
       sameSite: 'none',
       secure: true,
@@ -124,6 +125,7 @@ export class AuthService {
   /** NOTE: DELETE token */
   async expireToken(res: ExpressResponse) {
     const EXPIRED_COOKIE_OPTION: CookieOptions = {
+      domain: process.env.DOMAIN as string,
       httpOnly: true,
       sameSite: 'none',
       secure: true,

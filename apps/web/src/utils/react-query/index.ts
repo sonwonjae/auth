@@ -3,12 +3,17 @@ import type { ResponseMap, RQParams, RQServerParams } from "./types";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import type { ServerResponse } from "http";
 
+import https from "https";
+
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 export const apiAxios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_SERVER_HOST,
+  baseURL: process.env.HOST,
   timeout: 1000 * 60,
   withCredentials: true,
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+  }),
 });
 
 class RQ<
